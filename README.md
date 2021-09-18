@@ -1,4 +1,17 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Development
+
+# Packages
+
+npm i mongoose bycryptjs
+
+# Guides
+
+https://getbootstrap.com/docs/5.1/getting-started/introduction/
+https://www.w3schools.com/icons/fontawesome5_intro.asp
+https://fontawesome.com
+https://avatarmaker.com/
+https://cloudinary.com/
+https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
 
 ## Getting Started
 
@@ -32,4 +45,5 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
 # grocery-nextjs
