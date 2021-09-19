@@ -1,9 +1,9 @@
-import { connect } from '../../utils/db';
+import db from '../../utils/db';
 import Product from '../../models/Product';
 import { data } from '../../utils/data';
 import User from '../../models/User';
 
-connect();
+db.connect();
 
 export default async function handler(req, res) {
   try {

@@ -1,7 +1,28 @@
+import { useState } from 'react';
 import { getData } from '../utils/fetchData';
+import Head from 'next/head';
+import ProductItem from '../components/product/ProductItem';
 
 export default function Home(props) {
-  return <div>Home</div>;
+  const [products] = useState(props.products);
+
+  console.log(products);
+
+  return (
+    <div className="products">
+      <Head>
+        <title>Grocery Home</title>
+      </Head>
+
+      {products.length === 0 ? (
+        <h2>No Products</h2>
+      ) : (
+        products.map((product) => (
+          <ProductItem key={product._id} product={product} />
+        ))
+      )}
+    </div>
+  );
 }
 
 export async function getServerSideProps() {
