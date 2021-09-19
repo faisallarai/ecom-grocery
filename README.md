@@ -2,7 +2,7 @@
 
 # Packages
 
-npm i mongoose bycryptjs
+npm i mongoose bycryptjs jsonwebtoken js-cookie
 
 # Guides
 
@@ -12,6 +12,7 @@ https://fontawesome.com
 https://avatarmaker.com/
 https://cloudinary.com/
 https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
+https://passwordsgenerator.net
 
 ## Getting Started
 

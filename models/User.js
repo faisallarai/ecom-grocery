@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema(
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    role: { type: String, default: true, default: 'user' },
+    role: { type: String, required: true, default: 'user' },
     root: { type: String, required: true, default: false },
     avatar: {
       type: String,
@@ -18,6 +18,6 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-const User = mongoose.models.user || mongoose.model('User', userSchema);
+const User = mongoose.models.user || mongoose.model('user', userSchema);
 
 export default User;

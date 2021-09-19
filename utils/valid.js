@@ -1,4 +1,4 @@
-const valid = (name, email, password, confirmPassword) => {
+export const valid = (name, email, password, confirmPassword) => {
   if (!name && !email && !password) {
     return 'Please add all fields.';
   }
@@ -33,5 +33,3 @@ function validateEmail(email) {
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(String(email).toLowerCase());
 }
-
-export default valid;
