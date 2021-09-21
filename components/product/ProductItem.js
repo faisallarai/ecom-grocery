@@ -1,22 +1,29 @@
 /* eslint-disable @next/next/no-img-element */
-import React from 'react';
+import React, { useContext } from 'react';
 import NextLink from 'next/link';
+import { DataContext } from '../../store/GlobalState';
+import { addToCart } from '../../store/Actions';
 
 export default function ProductItem({ product }) {
+  const { state, dispatch } = useContext(DataContext);
+  const { cart } = state;
+
   const userLink = () => {
     return (
       <>
         <NextLink href={`/product/${product._id}`}>
           <a
-            className="col btn btn-info mr-1"
+            className="col btn btn-info"
             style={{ marginRight: '5px', flex: 1 }}
           >
             View
           </a>
         </NextLink>
         <button
-          className="col btn btn-success ml-1"
+          className="col btn btn-success"
           style={{ marginLeft: '5px', flex: 1 }}
+          disabled={product.inStock === 0 ? true : false}
+          onClick={() => dispatch(addToCart(product, cart))}
         >
           Buy
         </button>
@@ -34,7 +41,7 @@ export default function ProductItem({ product }) {
         <h5 className="card-title" title={product.title}>
           {product.title}
         </h5>
-        <div className="row d-flex justify-content-between mx-0">
+        <div className="row d-flex justify-content-between">
           <h6 className="col text-danger">GHC{product.price}</h6>
           {product.inStock > 0 ? (
             <h6 className="col text-danger">In Stock: {product.inStock}</h6>

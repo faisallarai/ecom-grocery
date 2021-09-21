@@ -8,9 +8,11 @@ export const DataProvider = ({ children }) => {
   const initialState = {
     notify: {},
     auth: {},
+    cart: [],
   };
 
   const [state, dispatch] = useReducer(reducers, initialState);
+  const { cart } = state;
 
   useEffect(() => {
     const firstLogin = localStorage.getItem('firstLogin');
@@ -28,6 +30,19 @@ export const DataProvider = ({ children }) => {
       });
     }
   }, []);
+
+  useEffect(() => {
+    const __next__cart01_grocery = JSON.parse(
+      localStorage.getItem('__next__cart01_grocery')
+    );
+
+    if (__next__cart01_grocery)
+      dispatch({ type: 'ADD_CART', payload: __next__cart01_grocery });
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('__next__cart01_grocery', JSON.stringify(cart));
+  }, [cart]);
 
   return (
     <DataContext.Provider value={{ state, dispatch }}>
