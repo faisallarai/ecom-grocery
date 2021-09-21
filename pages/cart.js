@@ -5,12 +5,16 @@ import { DataContext } from '../store/GlobalState';
 import CartItem from '../components/CartItem';
 import NextLink from 'next/link';
 import { getData } from '../utils/fetchData';
+import WaveBtn from '../components/WaveBtn';
 
 export default function Cart() {
   const { state, dispatch } = useContext(DataContext);
   const { auth, cart } = state;
 
   const [total, setTotal] = useState(0);
+  const [address, setAddress] = useState('');
+  const [mobile, setMobile] = useState('');
+  const [payment, setPayment] = useState(false);
 
   useEffect(() => {
     const getTotal = () => {
@@ -33,7 +37,7 @@ export default function Cart() {
       const updateCart = async () => {
         for (const item of cartLocal) {
           const res = await getData(`product/${item._id}`);
-          const { _id, title, images, price, inStock, sold } = res.product;
+          const { _id, title, images, price, inStock } = res.product;
           if (inStock > 0) {
             newArr.push({
               _id,
@@ -61,6 +65,16 @@ export default function Cart() {
         alt="not empty"
       />
     );
+
+  const handlePayment = () => {
+    if (!address || !mobile)
+      return dispatch({
+        type: 'NOTIFY',
+        payload: { error: 'Please add your address and mobile.' },
+      });
+
+    setPayment(true);
+  };
   return (
     <div className="row mx-auto">
       <Head>
@@ -92,6 +106,8 @@ export default function Cart() {
             name="address"
             id="address"
             className="form-control mb-2"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
           />
 
           <label htmlFor="mobile">Mobile</label>
@@ -100,6 +116,8 @@ export default function Cart() {
             name="mobile"
             id="mobile"
             className="form-control mb-2"
+            value={mobile}
+            onChange={(e) => setMobile(e.target.value)}
           />
         </form>
 
@@ -107,9 +125,21 @@ export default function Cart() {
           Total: <span className="text-danger">GHC{total}</span>
         </h3>
 
-        <NextLink href={auth.user ? '#' : '/signin'}>
-          <a className="btn btn-dark my-2">Proceed with payment</a>
-        </NextLink>
+        {payment ? (
+          <WaveBtn
+            total={total}
+            address={address}
+            mobile={mobile}
+            state={state}
+            dispatch={dispatch}
+          />
+        ) : (
+          <NextLink href={auth.user ? '#!' : '/signin'}>
+            <a className="btn btn-dark my-2" onClick={handlePayment}>
+              Proceed with payment
+            </a>
+          </NextLink>
+        )}
       </div>
     </div>
   );
