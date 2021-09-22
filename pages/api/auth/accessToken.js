@@ -1,4 +1,3 @@
-import React from 'react';
 import User from '../../../models/User';
 import jwt from 'jsonwebtoken';
 import { createAccessToken } from '../../../utils/token';
@@ -29,6 +28,7 @@ export default async function handler(req, res) {
     res.json({
       access_token,
       user: {
+        id: user._id,
         name: user.name,
         email: user.email,
         role: user.role,

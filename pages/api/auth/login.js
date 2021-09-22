@@ -2,7 +2,7 @@ import db from '../../../utils/db';
 import User from '../../../models/User';
 import bycrpt from 'bcryptjs';
 import { createAccessToken, createRefreshToken } from '../../../utils/token';
-import jwt from 'jsonwebtoken';
+
 db.connect();
 
 export default async function handler(req, res) {
@@ -32,6 +32,7 @@ const login = async (req, res) => {
       refresh_token,
       access_token,
       user: {
+        id: user._id,
         name: user.name,
         email: user.email,
         role: user.role,

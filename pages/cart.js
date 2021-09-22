@@ -4,12 +4,15 @@ import Head from 'next/head';
 import { DataContext } from '../store/GlobalState';
 import CartItem from '../components/CartItem';
 import NextLink from 'next/link';
-import { getData } from '../utils/fetchData';
-import WaveBtn from '../components/WaveBtn';
+import { getData, postData } from '../utils/fetchData';
+import { closePaymentModal, FlutterWaveButton } from 'flutterwave-react-v3';
+import { useRouter } from 'next/router';
 
 export default function Cart() {
   const { state, dispatch } = useContext(DataContext);
   const { auth, cart } = state;
+
+  const router = useRouter();
 
   const [total, setTotal] = useState(0);
   const [address, setAddress] = useState('');
@@ -37,7 +40,7 @@ export default function Cart() {
       const updateCart = async () => {
         for (const item of cartLocal) {
           const res = await getData(`product/${item._id}`);
-          const { _id, title, images, price, inStock } = res.product;
+          const { _id, title, images, price, inStock, sold } = res.product;
           if (inStock > 0) {
             newArr.push({
               _id,
@@ -45,6 +48,7 @@ export default function Cart() {
               images,
               price,
               inStock,
+              sold,
               quantity: item.quantity > inStock ? 1 : item.quantity,
             });
           }
@@ -56,6 +60,58 @@ export default function Cart() {
       updateCart();
     }
   }, []);
+
+  const [config, setConfig] = useState({});
+
+  useEffect(() => {
+    if (Object.keys(auth).length === 0) return router.push('/');
+    const config = {
+      public_key: process.env.WAVE_PUBLIC_KEY,
+      tx_ref: Date.now() + Math.floor(Math.random() * 10),
+      amount: total,
+      currency: 'GHS',
+      country: 'GH',
+      payment_options: 'card,mobilemoney,ussd',
+      meta: {
+        consumer_id: auth.user._id,
+        consumer_mac: '92a3-912ba-1192a',
+        address: address,
+      },
+      customer: {
+        email: auth.user.email,
+        phone_number: mobile,
+        name: auth.user.name,
+      },
+      customizations: {
+        title: 'My store',
+        description: 'Payment for items in cart',
+        logo: 'https://st2.depositphotos.com/4403291/7418/v/450/depositphotos_74189661-stock-illustration-online-shop-log.jpg',
+      },
+    };
+
+    const fwConfig = {
+      ...config,
+      text: 'Pay with Flutterwave!',
+      callback: (response) => {
+        console.log(response);
+        dispatch({ type: 'NOTIFY', payload: { loading: true } });
+        postData('order', { address, mobile, cart, total }, auth.token).then(
+          (res) => {
+            if (res.err)
+              return dispatch({
+                type: 'NOTIFY',
+                payload: { error: res.err },
+              });
+            dispatch({ type: 'ADD_CART', payload: [] });
+            dispatch({ type: 'NOTIFY', payload: { success: res.msg } });
+          }
+        );
+        closePaymentModal(); // this will close the modal programmatically
+      },
+      onClose: () => {},
+    };
+    setConfig(fwConfig);
+  }, [address, auth, cart, dispatch, mobile, router, total]);
 
   if (cart.length === 0)
     return (
@@ -75,6 +131,7 @@ export default function Cart() {
 
     setPayment(true);
   };
+
   return (
     <div className="row mx-auto">
       <Head>
@@ -126,12 +183,9 @@ export default function Cart() {
         </h3>
 
         {payment ? (
-          <WaveBtn
-            total={total}
-            address={address}
-            mobile={mobile}
-            state={state}
-            dispatch={dispatch}
+          <FlutterWaveButton
+            className="btn btn-warning my-2 w-100"
+            {...config}
           />
         ) : (
           <NextLink href={auth.user ? '#!' : '/signin'}>
