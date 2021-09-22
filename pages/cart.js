@@ -83,7 +83,7 @@ export default function Cart() {
         name: auth.user.name,
       },
       customizations: {
-        title: 'My store',
+        title: 'Grocery Shop',
         description: 'Payment for items in cart',
         logo: 'https://st2.depositphotos.com/4403291/7418/v/450/depositphotos_74189661-stock-illustration-online-shop-log.jpg',
       },
@@ -111,7 +111,7 @@ export default function Cart() {
       onClose: () => {},
     };
     setConfig(fwConfig);
-  }, [address, auth, cart, dispatch, mobile, router, total]);
+  }, [total]);
 
   if (cart.length === 0)
     return (

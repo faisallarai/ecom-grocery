@@ -52,9 +52,9 @@ function NavBar() {
 
         <ul className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
           <li>
-            <a className="dropdown-item" href="#">
-              Profile
-            </a>
+            <NextLink href="/profile">
+              <a className="dropdown-item">Profile</a>
+            </NextLink>
           </li>
           <li>
             <button className="dropdown-item" onClick={handleLogout}>

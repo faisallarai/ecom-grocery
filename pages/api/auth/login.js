@@ -16,8 +16,9 @@ export default async function handler(req, res) {
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-
     const user = await User.findOne({ email });
+    console.log(req.body);
+
     if (!user)
       return res.status(400).json({ err: 'This user does not exist.' });
 

@@ -8,6 +8,8 @@ export default function Home(props) {
 
   console.log(products);
 
+  if (!products) return null;
+
   return (
     <div className="products">
       <Head>
@@ -27,6 +29,11 @@ export default function Home(props) {
 
 export async function getServerSideProps() {
   const res = await getData('product');
+  if (!res.products) {
+    return {
+      notFound: true,
+    };
+  }
 
   // server side rendering
   return {
