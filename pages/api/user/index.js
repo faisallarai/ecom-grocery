@@ -26,7 +26,7 @@ const uploadInfo = async (req, res) => {
         name,
         avatar,
       }
-    ).select('-password');
+    );
 
     res.json({
       msg: 'Update success!',
