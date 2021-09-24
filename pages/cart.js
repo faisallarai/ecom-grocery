@@ -5,19 +5,18 @@ import { DataContext } from '../store/GlobalState';
 import CartItem from '../components/CartItem';
 import NextLink from 'next/link';
 import { getData, postData } from '../utils/fetchData';
-import { closePaymentModal, FlutterWaveButton } from 'flutterwave-react-v3';
 import { useRouter } from 'next/router';
 
 export default function Cart() {
   const { state, dispatch } = useContext(DataContext);
-  const { auth, cart } = state;
+  const { auth, cart, orders } = state;
 
   const router = useRouter();
 
   const [total, setTotal] = useState(0);
   const [address, setAddress] = useState('');
   const [mobile, setMobile] = useState('');
-  const [payment, setPayment] = useState(false);
+  const [callback, setCallback] = useState(false);
 
   useEffect(() => {
     const getTotal = () => {
@@ -59,59 +58,7 @@ export default function Cart() {
 
       updateCart();
     }
-  }, []);
-
-  const [config, setConfig] = useState({});
-
-  useEffect(() => {
-    if (Object.keys(auth).length === 0) return router.push('/');
-    const config = {
-      public_key: process.env.WAVE_PUBLIC_KEY,
-      tx_ref: Date.now() + Math.floor(Math.random() * 10),
-      amount: total,
-      currency: 'GHS',
-      country: 'GH',
-      payment_options: 'card,mobilemoney,ussd',
-      meta: {
-        consumer_id: auth.user._id,
-        consumer_mac: '92a3-912ba-1192a',
-        address: address,
-      },
-      customer: {
-        email: auth.user.email,
-        phone_number: mobile,
-        name: auth.user.name,
-      },
-      customizations: {
-        title: 'Grocery Shop',
-        description: 'Payment for items in cart',
-        logo: 'https://st2.depositphotos.com/4403291/7418/v/450/depositphotos_74189661-stock-illustration-online-shop-log.jpg',
-      },
-    };
-
-    const fwConfig = {
-      ...config,
-      text: 'Pay with Flutterwave!',
-      callback: (response) => {
-        console.log(response);
-        dispatch({ type: 'NOTIFY', payload: { loading: true } });
-        postData('order', { address, mobile, cart, total }, auth.token).then(
-          (res) => {
-            if (res.err)
-              return dispatch({
-                type: 'NOTIFY',
-                payload: { error: res.err },
-              });
-            dispatch({ type: 'ADD_CART', payload: [] });
-            dispatch({ type: 'NOTIFY', payload: { success: res.msg } });
-          }
-        );
-        closePaymentModal(); // this will close the modal programmatically
-      },
-      onClose: () => {},
-    };
-    setConfig(fwConfig);
-  }, [total]);
+  }, [callback]);
 
   if (cart.length === 0)
     return (
@@ -122,14 +69,50 @@ export default function Cart() {
       />
     );
 
-  const handlePayment = () => {
+  const handlePayment = async () => {
     if (!address || !mobile)
       return dispatch({
         type: 'NOTIFY',
         payload: { error: 'Please add your address and mobile.' },
       });
 
-    setPayment(true);
+    let newCart = [];
+    for (const item of cart) {
+      const res = await getData(`product/${item._id}`);
+      if (res.product.inStock - item.quantity >= 0) {
+        newCart.push(item);
+      }
+    }
+
+    console.log(newCart.length, cart.length);
+    if (newCart.length < cart.length) {
+      setCallback(!callback);
+      return dispatch({
+        type: 'NOTIFY',
+        payload: {
+          error: 'The product is out of stock or the quantity is insufficient.',
+        },
+      });
+    }
+
+    dispatch({ type: 'NOTIFY', payload: { loading: true } });
+
+    postData('order', { address, mobile, cart, total }, auth.token).then(
+      (res) => {
+        if (res.err)
+          return dispatch({ type: 'NOTIFY', payload: { error: res.err } });
+
+        dispatch({ type: 'ADD_CART', payload: [] });
+
+        const newOrder = {
+          ...res.newOrder,
+          user: auth.user,
+        };
+        dispatch({ type: 'ADD_ORDERS', payload: [...orders, newOrder] });
+        dispatch({ type: 'NOTIFY', payload: { success: res.msg } });
+        return router.push(`/order/${res.newOrder._id}`);
+      }
+    );
   };
 
   return (
@@ -182,18 +165,11 @@ export default function Cart() {
           Total: <span className="text-danger">GHC{total}</span>
         </h3>
 
-        {payment ? (
-          <FlutterWaveButton
-            className="btn btn-warning my-2 w-100"
-            {...config}
-          />
-        ) : (
-          <NextLink href={auth.user ? '#!' : '/signin'}>
-            <a className="btn btn-dark my-2" onClick={handlePayment}>
-              Proceed with payment
-            </a>
-          </NextLink>
-        )}
+        <NextLink href={auth.user ? '#!' : '/signin'}>
+          <a className="btn btn-dark my-2" onClick={handlePayment}>
+            Proceed with payment
+          </a>
+        </NextLink>
       </div>
     </div>
   );

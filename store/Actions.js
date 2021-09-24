@@ -3,6 +3,7 @@ export const ACTIONS = {
   AUTH: 'AUTH',
   ADD_CART: 'ADD_CART',
   ADD_MODAL: 'ADD_MODAL',
+  ADD_ORDERS: 'ADD_ORDERS',
 };
 
 export const addToCart = (product, cart) => {
@@ -47,5 +48,11 @@ export const increase = (data, id) => {
 export const deleteItem = (data, id, actionType) => {
   // return data without the item to be deleted
   const newData = data.filter((item) => item._id !== id);
+  return { type: actionType, payload: newData };
+};
+
+export const updateItem = (data, id, post, actionType) => {
+  // loop and update the item when found
+  const newData = data.map((item) => (item._id === id ? post : item));
   return { type: actionType, payload: newData };
 };

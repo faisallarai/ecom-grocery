@@ -7,7 +7,12 @@ const orderSchema = new mongoose.Schema(
     mobile: { type: String },
     cart: { type: Array },
     total: { type: Number },
-    delivered: { type: Boolean, default: false },
+    isPaid: { type: Boolean, required: true, default: false },
+    isDelivered: { type: Boolean, required: true, default: false },
+    isVerified: { type: Boolean, required: true, default: false },
+    paidAt: { type: Date },
+    deliveredAt: { type: Date },
+    verifiedAt: { type: Date },
   },
   {
     timestamps: true,

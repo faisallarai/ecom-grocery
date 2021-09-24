@@ -1,6 +1,5 @@
 import auth from '../../../middleware/auth';
 import db from '../../../utils/db';
-import bycrypt from 'bcryptjs';
 import User from '../../../models/User';
 
 db.connect();
