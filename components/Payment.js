@@ -34,11 +34,16 @@ export default function Payment({ order }) {
 
   const fwConfig = {
     ...config,
-    text: 'Pay with Flutterwave!',
+    text: 'Pay now!',
     callback: (response) => {
       console.log(response);
       dispatch({ type: 'NOTIFY', payload: { loading: true } });
-      patchData(`order/${order._id}`, null, auth.token).then((res) => {
+      patchData(
+        `order/payment/${order._id}`,
+        { transactionId: response.transaction_id },
+        auth.token
+      ).then((res) => {
+        console.log('PAYMENT', res);
         if (res.err)
           return dispatch({
             type: 'NOTIFY',
@@ -49,7 +54,13 @@ export default function Payment({ order }) {
           updateItem(
             orders,
             order._id,
-            { ...order, isPaid: true, paidAt: new Date().toISOString() },
+            {
+              ...order,
+              isPaid: true,
+              paidAt: res.payment.data.created_at,
+              paymentMethod: res.payment.data.payment_type,
+              paymentId: res.payment.data.flw_ref,
+            },
             'ADD_ORDERS'
           )
         );

@@ -23,6 +23,7 @@ function NavBar() {
     localStorage.removeItem('firstLogin');
     dispatch({ type: 'AUTH', payload: {} });
     dispatch({ type: 'NOTIFY', payload: { success: 'Logged Out!' } });
+    router.push('/signin');
   };
 
   const loggedRouter = () => {
@@ -55,6 +56,10 @@ function NavBar() {
             <NextLink href="/profile">
               <a className="dropdown-item">Profile</a>
             </NextLink>
+            {auth.user.role === 'admin' && adminRouter()}
+          </li>
+          <li>
+            <hr className="dropdown-divider" />
           </li>
           <li>
             <button className="dropdown-item" onClick={handleLogout}>
@@ -63,6 +68,22 @@ function NavBar() {
           </li>
         </ul>
       </li>
+    );
+  };
+
+  const adminRouter = () => {
+    return (
+      <>
+        <NextLink href="/users">
+          <a className="dropdown-item">Users</a>
+        </NextLink>
+        <NextLink href="/create">
+          <a className="dropdown-item">Products</a>
+        </NextLink>
+        <NextLink href="/categories">
+          <a className="dropdown-item">Categories</a>
+        </NextLink>
+      </>
     );
   };
 

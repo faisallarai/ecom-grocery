@@ -7,6 +7,8 @@ const orderSchema = new mongoose.Schema(
     mobile: { type: String },
     cart: { type: Array },
     total: { type: Number },
+    paymentId: { type: String },
+    paymentMethod: { type: String },
     isPaid: { type: Boolean, required: true, default: false },
     isDelivered: { type: Boolean, required: true, default: false },
     isVerified: { type: Boolean, required: true, default: false },

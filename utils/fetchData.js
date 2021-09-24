@@ -67,3 +67,16 @@ export const deleteData = async (url, token) => {
   const data = await res.json();
   return data;
 };
+
+export const getExternalData = async (url, token) => {
+  const res = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: token,
+    },
+  });
+
+  const data = res.json();
+  return data;
+};

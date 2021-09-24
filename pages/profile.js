@@ -214,7 +214,7 @@ export default function Profile() {
                     </td>
                     <td className="p-2">GHS{order.total}</td>
                     <td className="p-2">
-                      {order.delivered ? (
+                      {order.isDelivered ? (
                         <i
                           className="fas fa-check text-success"
                           aria-hidden="true"
