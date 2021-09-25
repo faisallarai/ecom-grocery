@@ -23,7 +23,8 @@ function NavBar() {
     localStorage.removeItem('firstLogin');
     dispatch({ type: 'AUTH', payload: {} });
     dispatch({ type: 'NOTIFY', payload: { success: 'Logged Out!' } });
-    router.push('/signin');
+    dispatch({ type: 'ADD_ORDERS', payload: [] });
+    router.push('/');
   };
 
   const loggedRouter = () => {

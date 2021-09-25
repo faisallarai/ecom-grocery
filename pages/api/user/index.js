@@ -9,10 +9,26 @@ export default async function handler(req, res) {
     case 'PATCH':
       await uploadInfo(req, res);
       break;
+    case 'GET':
+      await getUsers(req, res);
+      break;
     default:
       res.status(400).json({ err: 'Invalid Method' });
   }
 }
+
+const getUsers = async (req, res) => {
+  try {
+    const result = await auth(req, res);
+    if (result.role !== 'admin')
+      return res.status(400).json({ err: 'Authentication is not valid' });
+
+    const users = await User.find().select('-password');
+    res.json({ users });
+  } catch (err) {
+    return res.status(500).json({ err: err.message });
+  }
+};
 
 const uploadInfo = async (req, res) => {
   try {
