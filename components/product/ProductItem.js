@@ -4,7 +4,7 @@ import NextLink from 'next/link';
 import { DataContext } from '../../store/GlobalState';
 import { addToCart } from '../../store/Actions';
 
-export default function ProductItem({ product }) {
+export default function ProductItem({ product, handleCheck }) {
   const { state, dispatch } = useContext(DataContext);
   const { auth, cart } = state;
 
@@ -45,6 +45,21 @@ export default function ProductItem({ product }) {
         <button
           className="col btn btn-danger"
           style={{ marginLeft: '5px', flex: 1 }}
+          data-bs-toggle="modal"
+          data-bs-target="#exampleModal"
+          onClick={() =>
+            dispatch({
+              type: 'ADD_MODAL',
+              payload: [
+                {
+                  data: '',
+                  id: product._id,
+                  title: product.name,
+                  type: 'DELETE_PRODUCT',
+                },
+              ],
+            })
+          }
         >
           Delete
         </button>
@@ -54,6 +69,15 @@ export default function ProductItem({ product }) {
 
   return (
     <div className="card" style={{ width: '18rem' }}>
+      {auth.user && auth.user.role === 'admin' && (
+        <input
+          type="checkbox"
+          checked={product.checked}
+          className="position-absolute"
+          style={{ height: '20px', width: '20px' }}
+          onChange={() => handleCheck(product._id)}
+        />
+      )}
       <img
         src={product.images[0].url}
         className="card-img-top"

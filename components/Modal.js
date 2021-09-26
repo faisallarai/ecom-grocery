@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import React, { useContext } from 'react';
 import { deleteItem } from '../store/Actions';
 import { DataContext } from '../store/GlobalState';
@@ -7,26 +8,53 @@ export default function Modal() {
   const { state, dispatch } = useContext(DataContext);
   const { auth, modal } = state;
 
+  const router = useRouter();
+
+  const deleteUser = (item) => {
+    dispatch(deleteItem(item.data, item.id, item.type));
+
+    deleteData(`user/${item.id}`, auth.token).then((res) => {
+      if (res.err)
+        return dispatch({ type: 'NOTIFY', payload: { error: res.err } });
+
+      return dispatch({ type: 'NOTIFY', payload: { success: res.msg } });
+    });
+  };
+
+  const deleteCategory = (item) => {
+    dispatch(deleteItem(item.data, item.id, item.type));
+
+    deleteData(`category/${item.id}`, auth.token).then((res) => {
+      if (res.err)
+        return dispatch({ type: 'NOTIFY', payload: { error: res.err } });
+
+      return dispatch({ type: 'NOTIFY', payload: { success: res.msg } });
+    });
+  };
+
+  const deleteProduct = (item) => {
+    dispatch({ type: 'NOTIFY', payload: { loading: true } });
+    deleteData(`product/${item.id}`, auth.token).then((res) => {
+      if (res.err)
+        return dispatch({ type: 'NOTIFY', payload: { error: res.err } });
+
+      dispatch({ type: 'NOTIFY', payload: { success: res.msg } });
+      router.push('/');
+    });
+  };
+
   const handleSubmit = () => {
-    if (modal.type === 'ADD_USERS') {
-      deleteData(`user/${modal.id}`, auth.token).then((res) => {
-        if (res.err)
-          return dispatch({ type: 'NOTIFY', payload: { error: res.err } });
+    if (modal.length !== 0) {
+      for (const item of modal) {
+        if (item.type === 'ADD_USERS') deleteUser(item);
 
-        return dispatch({ type: 'NOTIFY', payload: { success: res.msg } });
-      });
+        if (item.type === 'ADD_CATEGORIES') deleteCategory(item);
+
+        if (item.type === 'DELETE_PRODUCT') deleteProduct(item);
+
+        dispatch({ type: 'ADD_MODAL', payload: [] });
+      }
     }
-
-    if (modal.type === 'ADD_CATEGORIES') {
-      deleteData(`category/${modal.id}`, auth.token).then((res) => {
-        if (res.err)
-          return dispatch({ type: 'NOTIFY', payload: { error: res.err } });
-
-        return dispatch({ type: 'NOTIFY', payload: { success: res.msg } });
-      });
-    }
-    dispatch(deleteItem(modal.data, modal.id, modal.type));
-    dispatch({ type: 'ADD_MODAL', payload: {} });
   };
 
   return (
@@ -41,7 +69,7 @@ export default function Modal() {
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title text-capitalize" id="exampleModalLabel">
-              {modal.title}
+              {modal.length !== 0 && modal[0].title}
             </h5>
             <button
               type="button"
