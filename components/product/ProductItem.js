@@ -6,7 +6,7 @@ import { addToCart } from '../../store/Actions';
 
 export default function ProductItem({ product }) {
   const { state, dispatch } = useContext(DataContext);
-  const { cart } = state;
+  const { auth, cart } = state;
 
   const userLink = () => {
     return (
@@ -30,6 +30,28 @@ export default function ProductItem({ product }) {
       </>
     );
   };
+
+  const adminLink = () => {
+    return (
+      <>
+        <NextLink href={`/create/${product._id}`}>
+          <a
+            className="col btn btn-info"
+            style={{ marginRight: '5px', flex: 1 }}
+          >
+            Edit
+          </a>
+        </NextLink>
+        <button
+          className="col btn btn-danger"
+          style={{ marginLeft: '5px', flex: 1 }}
+        >
+          Delete
+        </button>
+      </>
+    );
+  };
+
   return (
     <div className="card" style={{ width: '18rem' }}>
       <img
@@ -38,8 +60,8 @@ export default function ProductItem({ product }) {
         alt={product.name}
       />
       <div className="card-body">
-        <h5 className="card-title" title={product.title}>
-          {product.title}
+        <h5 className="card-title" title={product.name}>
+          {product.name}
         </h5>
         <div className="row d-flex justify-content-between">
           <h6 className="col text-danger">GHC{product.price}</h6>
@@ -53,7 +75,7 @@ export default function ProductItem({ product }) {
           {product.description}
         </p>
         <div className="row d-flex justify-content-between mx-0">
-          {userLink()}
+          {!auth.user || auth.user.role !== 'admin' ? userLink() : adminLink()}
         </div>
       </div>
     </div>

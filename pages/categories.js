@@ -54,8 +54,6 @@ export default function Categories() {
     setName(category.name);
   };
 
-  const handleDeleteCategory = (category) => {};
-
   return (
     <div className="col-md-6 mx-auto my-3">
       <Head>
