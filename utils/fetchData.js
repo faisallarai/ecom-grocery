@@ -1,12 +1,25 @@
 const baseUrl = process.env.BASE_URL;
 
+const getHeaders = (token) => {
+  let headers;
+
+  if (token) {
+    headers = {
+      'Content-Type': 'application/json',
+      Authorization: token,
+    };
+  } else {
+    headers = {
+      'Content-Type': 'application/json',
+    };
+  }
+
+  return headers;
+};
 export const getData = async (url, token) => {
   const res = await fetch(`${baseUrl}/api/${url}`, {
     method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: token,
-    },
+    headers: getHeaders(token),
   });
 
   const data = await res.json();
