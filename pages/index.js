@@ -5,6 +5,7 @@ import ProductItem from '../components/product/ProductItem';
 import { DataContext } from '../store/GlobalState';
 import filterSearch from '../utils/filterSearch';
 import { useRouter } from 'next/router';
+import Filter from '../components/Filter';
 
 export default function Home(props) {
   const { state, dispatch } = useContext(DataContext);
@@ -23,10 +24,8 @@ export default function Home(props) {
   useEffect(() => {
     if (Object.keys(router.query).length === 0) {
       setPage(1);
-    } else {
-      setPage(Number(router.query.page));
     }
-  });
+  }, [router.query]);
 
   const handleCheck = (id) => {
     products.forEach((product) => {
@@ -67,6 +66,12 @@ export default function Home(props) {
 
   return (
     <div className="home_page">
+      <Head>
+        <title>Home Page</title>
+      </Head>
+
+      <Filter state={state} />
+
       {auth.user && auth.user.role === 'admin' && (
         <div
           className="delete_all btn btn-danger mt-2"
@@ -93,10 +98,6 @@ export default function Home(props) {
         </div>
       )}
       <div className="products">
-        <Head>
-          <title>Grocery Home</title>
-        </Head>
-
         {products.length === 0 ? (
           <h2>No Products</h2>
         ) : (
@@ -124,18 +125,20 @@ export default function Home(props) {
 }
 
 export async function getServerSideProps({ query }) {
+  console.log(query);
   const page = query.page || 1;
   const category = query.category || 'all';
   const sort = query.sort || '';
   const search = query.search || 'all';
-
-  console.log(page);
 
   const res = await getData(
     `product?limit=${
       page * 6
     }&category=${category}&sort=${sort}&search=${search}`
   );
+
+  console.log(res.products);
+
   if (!res.products) {
     return {
       notFound: true,

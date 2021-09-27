@@ -44,10 +44,6 @@ const createCategory = async (req, res) => {
 
 const getCategories = async (req, res) => {
   try {
-    const result = await auth(req, res);
-    if (result.role !== 'admin' || !result.root)
-      return res.status(400).json({ err: 'Authentication is not valid' });
-
     const categories = await Category.find();
     res.json({ categories });
   } catch (err) {

@@ -33,6 +33,13 @@ export const DataProvider = ({ children }) => {
         });
       });
     }
+    getData('category').then((res) => {
+      if (res.err)
+        return dispatch({ type: 'NOTIFY', payload: { error: res.err } });
+
+      console.log(res.categories);
+      dispatch({ type: 'ADD_CATEGORIES', payload: res.categories });
+    });
   }, []);
 
   useEffect(() => {
@@ -63,16 +70,6 @@ export const DataProvider = ({ children }) => {
             return dispatch({ type: 'NOTIFY', payload: { error: res.err } });
 
           dispatch({ type: 'ADD_USERS', payload: res.users });
-        });
-      }
-
-      if (auth.user.role === 'admin') {
-        getData('category', auth.token).then((res) => {
-          if (res.err)
-            return dispatch({ type: 'NOTIFY', payload: { error: res.err } });
-
-          console.log(res.categories);
-          dispatch({ type: 'ADD_CATEGORIES', payload: res.categories });
         });
       }
     } else {

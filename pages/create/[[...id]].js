@@ -176,7 +176,7 @@ export default function ProductsManager() {
             name="name"
             value={name}
             placeholder="Product Name"
-            className="d-block my-4 w-100 p-2"
+            className="d-block my-4 w-100 p-2 text-capitalize"
             onChange={handleChangeInput}
           />
 

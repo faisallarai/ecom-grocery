@@ -68,7 +68,7 @@ export default function ProductItem({ product, handleCheck }) {
   };
 
   return (
-    <div className="card" style={{ width: '18rem' }}>
+    <div className="card text-capitalize" style={{ width: '18rem' }}>
       {auth.user && auth.user.role === 'admin' && (
         <input
           type="checkbox"

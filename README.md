@@ -13,6 +13,8 @@ https://avatarmaker.com/
 https://cloudinary.com/
 https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
 https://passwordsgenerator.net
+https://vercel.com/
+https://lipsum.com
 
 ## Getting Started
 

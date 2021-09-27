@@ -1,6 +1,7 @@
 import auth from '../../../middleware/auth';
 import db from '../../../utils/db';
 import Category from '../../../models/Category';
+import Product from '../../../models/Product';
 
 db.connect();
 
@@ -44,6 +45,12 @@ const deleteCategory = async (req, res) => {
       return res.status(400).json({ err: 'Authentication is not valid.' });
 
     const { id } = req.query;
+
+    const products = await Product.findOne({ category: id });
+    if (products)
+      return res
+        .status(500)
+        .json({ err: 'Please delete all products with a relationship.' });
 
     await Category.findByIdAndDelete(id);
     res.json({ msg: 'Success! Deleted a category' });

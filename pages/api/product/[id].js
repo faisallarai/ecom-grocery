@@ -58,7 +58,7 @@ const updateProduct = async (req, res) => {
       return res.status(400).json({ err: 'Please add all the fields.' });
 
     await Product.findByIdAndUpdate(id, {
-      name,
+      name: name.toLowerCase(),
       price,
       inStock,
       description,

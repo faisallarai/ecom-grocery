@@ -11,23 +11,23 @@ export default function Modal() {
   const router = useRouter();
 
   const deleteUser = (item) => {
-    dispatch(deleteItem(item.data, item.id, item.type));
-
+    dispatch({ type: 'NOTIFY', payload: { loading: true } });
     deleteData(`user/${item.id}`, auth.token).then((res) => {
       if (res.err)
         return dispatch({ type: 'NOTIFY', payload: { error: res.err } });
 
+      dispatch(deleteItem(item.data, item.id, item.type));
       return dispatch({ type: 'NOTIFY', payload: { success: res.msg } });
     });
   };
 
   const deleteCategory = (item) => {
-    dispatch(deleteItem(item.data, item.id, item.type));
-
+    dispatch({ type: 'NOTIFY', payload: { loading: true } });
     deleteData(`category/${item.id}`, auth.token).then((res) => {
       if (res.err)
         return dispatch({ type: 'NOTIFY', payload: { error: res.err } });
 
+      dispatch(deleteItem(item.data, item.id, item.type));
       return dispatch({ type: 'NOTIFY', payload: { success: res.msg } });
     });
   };
