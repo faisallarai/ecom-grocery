@@ -1,15 +1,32 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { getData } from '../utils/fetchData';
 import Head from 'next/head';
 import ProductItem from '../components/product/ProductItem';
 import { DataContext } from '../store/GlobalState';
+import filterSearch from '../utils/filterSearch';
+import { useRouter } from 'next/router';
 
 export default function Home(props) {
   const { state, dispatch } = useContext(DataContext);
   const { auth } = state;
 
+  const router = useRouter();
+
   const [products, setProducts] = useState(props.products);
   const [isCheck, setIsCheck] = useState(false);
+  const [page, setPage] = useState(1);
+
+  useEffect(() => {
+    setProducts(props.products);
+  }, [props.products]);
+
+  useEffect(() => {
+    if (Object.keys(router.query).length === 0) {
+      setPage(1);
+    } else {
+      setPage(Number(router.query.page));
+    }
+  });
 
   const handleCheck = (id) => {
     products.forEach((product) => {
@@ -38,6 +55,12 @@ export default function Home(props) {
     });
 
     dispatch({ type: 'ADD_MODAL', payload: deleteArr });
+  };
+
+  const handleLoadmore = () => {
+    // console.log(router);
+    setPage(page + 1);
+    filterSearch({ router, page: page + 1 });
   };
 
   if (!products) return null;
@@ -86,12 +109,33 @@ export default function Home(props) {
           ))
         )}
       </div>
+      {props.result < page * 6 ? (
+        ''
+      ) : (
+        <button
+          className="btn btn-outline-info d-block mx-auto mb-4"
+          onClick={handleLoadmore}
+        >
+          Load more
+        </button>
+      )}
     </div>
   );
 }
 
-export async function getServerSideProps() {
-  const res = await getData('product');
+export async function getServerSideProps({ query }) {
+  const page = query.page || 1;
+  const category = query.category || 'all';
+  const sort = query.sort || '';
+  const search = query.search || 'all';
+
+  console.log(page);
+
+  const res = await getData(
+    `product?limit=${
+      page * 6
+    }&category=${category}&sort=${sort}&search=${search}`
+  );
   if (!res.products) {
     return {
       notFound: true,
