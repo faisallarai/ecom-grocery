@@ -5,7 +5,7 @@ export const getData = async (url, token) => {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: token || '',
+      Authorization: token,
     },
   });
 
