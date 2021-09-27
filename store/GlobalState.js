@@ -33,7 +33,7 @@ export const DataProvider = ({ children }) => {
         });
       });
     }
-    getData('category').then((res) => {
+    getData('category', null).then((res) => {
       if (res.err)
         return dispatch({ type: 'NOTIFY', payload: { error: res.err } });
 

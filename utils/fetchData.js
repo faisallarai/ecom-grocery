@@ -13,7 +13,7 @@ export const getData = async (url, token) => {
   return data;
 };
 
-export const postData = async (url, post, token = null) => {
+export const postData = async (url, post, token) => {
   const res = await fetch(`${baseUrl}/api/${url}`, {
     method: 'POST',
     headers: {
