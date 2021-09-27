@@ -130,7 +130,7 @@ export async function getServerSideProps({ query }) {
   const search = query.search || 'all';
 
   const res = await getData(
-    `product?limit=${
+    `product/products?limit=${
       page * 6
     }&category=${category}&sort=${sort}&search=${search}`
   );
