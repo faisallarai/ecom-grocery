@@ -37,7 +37,6 @@ export const DataProvider = ({ children }) => {
       if (res.err)
         return dispatch({ type: 'NOTIFY', payload: { error: res.err } });
 
-      console.log(res.categories);
       dispatch({ type: 'ADD_CATEGORIES', payload: res.categories });
     });
   }, []);
