@@ -1,7 +1,7 @@
 const baseUrl = process.env.BASE_URL;
 
 const getHeaders = (token) => {
-  let headers;
+  let headers = {};
 
   if (token) {
     headers = {
@@ -17,6 +17,8 @@ const getHeaders = (token) => {
   return headers;
 };
 export const getData = async (url, token) => {
+  console.log(getHeaders(token));
+
   const res = await fetch(`${baseUrl}/api/${url}`, {
     method: 'GET',
     headers: getHeaders(token),
