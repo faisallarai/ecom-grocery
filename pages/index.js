@@ -62,8 +62,6 @@ export default function Home(props) {
     filterSearch({ router, page: page + 1 });
   };
 
-  if (!products) return null;
-
   return (
     <div className="home_page">
       <Head>
@@ -125,7 +123,7 @@ export default function Home(props) {
 }
 
 export async function getServerSideProps({ query }) {
-  console.log(query);
+  // console.log(query);
   const page = query.page || 1;
   const category = query.category || 'all';
   const sort = query.sort || '';
@@ -137,7 +135,7 @@ export async function getServerSideProps({ query }) {
     }&category=${category}&sort=${sort}&search=${search}`
   );
 
-  console.log(res.products);
+  // console.log(res.products);
 
   if (!res.products) {
     return {

@@ -22,7 +22,7 @@ export default function Filter({ state }) {
   };
 
   useEffect(() => {
-    console.log(search);
+    // console.log(search);
     filterSearch({ router, search: search ? search.toLowerCase() : 'all' });
   }, [search]);
 
