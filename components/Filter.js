@@ -16,6 +16,10 @@ export default function Filter({ state }) {
     filterSearch({ router, category: e.target.value });
   };
 
+  useEffect(() => {
+    console.log('cats', categories);
+  }, []);
+
   const handleSort = (e) => {
     setSort(e.target.value);
     filterSearch({ router, sort: e.target.value });

@@ -34,7 +34,6 @@ export const DataProvider = ({ children }) => {
       });
     }
     getData('category').then((res) => {
-      console.log(res.categories);
       if (res.err)
         return dispatch({ type: 'NOTIFY', payload: { error: res.err } });
 
