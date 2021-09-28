@@ -79,12 +79,14 @@ export default function Users() {
                     onClick={() =>
                       dispatch({
                         type: 'ADD_MODAL',
-                        payload: {
-                          data: users,
-                          id: user._id,
-                          title: user.name,
-                          type: 'ADD_USERS',
-                        },
+                        payload: [
+                          {
+                            data: users,
+                            id: user._id,
+                            title: user.name,
+                            type: 'ADD_USERS',
+                          },
+                        ],
                       })
                     }
                   ></i>

@@ -1,27 +1,12 @@
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
-const getHeaders = (token) => {
-  let headers = {};
-
-  if (token) {
-    headers = {
-      'Content-Type': 'application/json',
-      Authorization: token,
-    };
-  } else {
-    headers = {
-      'Content-Type': 'application/json',
-    };
-  }
-
-  return headers;
-};
 export const getData = async (url, token) => {
-  console.log(getHeaders(token));
-
   const res = await fetch(`${baseUrl}/api/${url}`, {
     method: 'GET',
-    headers: getHeaders(token),
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: token,
+    },
   });
 
   const data = await res.json();
