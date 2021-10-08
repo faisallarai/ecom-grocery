@@ -9,7 +9,7 @@ export default function Payment({ order }) {
   const { auth, orders } = state;
 
   const config = {
-    public_key: process.env.WAVE_PUBLIC_KEY,
+    public_key: process.env.NEXT_PUBLIC_WAVE_PUBLIC_KEY,
     tx_ref: Date.now() + Math.floor(Math.random() * 10),
     amount: order.total,
     currency: 'GHS',

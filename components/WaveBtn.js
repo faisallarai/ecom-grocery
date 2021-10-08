@@ -13,7 +13,7 @@ export default function WaveBtn({ total, address, mobile, state, dispatch }) {
     if (!auth) return router.push('/login');
     const makePayment = () => {
       FlutterwaveCheckout({
-        public_key: process.env.WAVE_PUBLIC_KEY,
+        public_key: process.env.NEXT_PUBLIC_WAVE_PUBLIC_KEY,
         tx_ref: 'RX1',
         amount: total,
         currency: 'GHS',

@@ -15,6 +15,7 @@ https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-ja
 https://passwordsgenerator.net
 https://vercel.com/
 https://lipsum.com
+https://www.cdnpkg.com/jqueryui
 
 ## Getting Started
 
